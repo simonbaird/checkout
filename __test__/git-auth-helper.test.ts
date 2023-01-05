@@ -798,6 +798,7 @@ async function setup(testName: string): Promise<void> {
     clean: true,
     commit: '',
     fetchDepth: 1,
+    showProgress: true,
     lfs: false,
     submodules: false,
     nestedSubmodules: false,
