@@ -7533,13 +7533,13 @@ class GitCommandManager {
             return output.exitCode === 0;
         });
     }
-    fetch(refSpec, fetchDepth) {
+    fetch(refSpec, fetchDepth, quiet) {
         return __awaiter(this, void 0, void 0, function* () {
             const args = ['-c', 'protocol.version=2', 'fetch'];
             if (!refSpec.some(x => x === refHelper.tagsRefSpec)) {
                 args.push('--no-tags');
             }
-            args.push('--prune', '--progress', '--no-recurse-submodules');
+            args.push('--prune', quiet ? '--quiet' : '--progress', '--no-recurse-submodules');
             if (fetchDepth && fetchDepth > 0) {
                 args.push(`--depth=${fetchDepth}`);
             }
@@ -18521,6 +18521,9 @@ function getInputs() {
             result.fetchDepth = 0;
         }
         core.debug(`fetch depth = ${result.fetchDepth}`);
+        // Quiet
+        result.quiet = (core.getInput('quiet') || 'false').toUpperCase() == 'TRUE';
+        core.debug(`quiet = ${result.quiet}`);
         // LFS
         result.lfs = (core.getInput('lfs') || 'false').toUpperCase() === 'TRUE';
         core.debug(`lfs = ${result.lfs}`);
@@ -31971,17 +31974,17 @@ function getSource(settings) {
             if (settings.fetchDepth <= 0) {
                 // Fetch all branches and tags
                 let refSpec = refHelper.getRefSpecForAllHistory(settings.ref, settings.commit);
-                yield git.fetch(refSpec);
+                yield git.fetch(refSpec, settings.fetchDepth, settings.quiet);
                 // When all history is fetched, the ref we're interested in may have moved to a different
                 // commit (push or force push). If so, fetch again with a targeted refspec.
                 if (!(yield refHelper.testRef(git, settings.ref, settings.commit))) {
                     refSpec = refHelper.getRefSpec(settings.ref, settings.commit);
-                    yield git.fetch(refSpec);
+                    yield git.fetch(refSpec, settings.fetchDepth, settings.quiet);
                 }
             }
             else {
                 const refSpec = refHelper.getRefSpec(settings.ref, settings.commit);
-                yield git.fetch(refSpec, settings.fetchDepth);
+                yield git.fetch(refSpec, settings.fetchDepth, settings.quiet);
             }
             core.endGroup();
             // Checkout info

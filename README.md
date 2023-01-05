@@ -78,6 +78,10 @@ When Git 2.18 or higher is not in your PATH, falls back to the REST API to downl
     # Default: 1
     fetch-depth: ''
 
+    # Whether to suppress the progress indicator with the `--quiet` when fetching.
+    # Default: false
+    quiet: ''
+
     # Whether to download Git-LFS files
     # Default: false
     lfs: ''

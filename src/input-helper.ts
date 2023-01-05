@@ -89,6 +89,10 @@ export async function getInputs(): Promise<IGitSourceSettings> {
   }
   core.debug(`fetch depth = ${result.fetchDepth}`)
 
+  // Quiet
+  result.quiet = (core.getInput('quiet') || 'false').toUpperCase() == 'TRUE'
+  core.debug(`quiet = ${result.quiet}`)
+
   // LFS
   result.lfs = (core.getInput('lfs') || 'false').toUpperCase() === 'TRUE'
   core.debug(`lfs = ${result.lfs}`)

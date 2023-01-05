@@ -35,6 +35,11 @@ export interface IGitSourceSettings {
   fetchDepth: number
 
   /**
+   * Indicates whether to use --quiet when fetching
+   */
+  quiet: boolean
+
+  /**
    * Indicates whether to fetch LFS objects
    */
   lfs: boolean
